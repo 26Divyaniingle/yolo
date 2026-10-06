@@ -18,3 +18,10 @@ __pycache__/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Datasets and large archives
+data/
+**/data/
+*.tar.gz
+*.tar
+*.zip

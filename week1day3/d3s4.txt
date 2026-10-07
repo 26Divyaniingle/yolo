@@ -1,0 +1,85 @@
+YOLOv8 Loss Functions and Label Assignment
+
+YOLOv8 detection training mainly uses three loss components:
+Box Loss, Classification Loss, and Distribution Focal Loss (DFL).
+
+1. Box Loss:
+Box loss measures how accurately the predicted bounding box matches
+the ground-truth box. YOLOv8 uses an IoU-based loss with CIoU, which
+considers overlap as well as geometric properties such as center
+distance and aspect ratio.
+
+2. Classification Loss:
+Classification loss checks whether the detected object has the correct
+class. YOLOv8 uses BCEWithLogitsLoss for the classification component.
+
+3. DFL:
+Distribution Focal Loss improves bounding-box localization by allowing
+the model to predict distributions for the distances from an anchor
+point to the four sides of the bounding box. This helps achieve more
+precise localization.
+
+4. Task-Aligned Assigner:
+During training, many predictions are generated for an image. The
+TaskAlignedAssigner selects suitable predictions as positive samples
+for each ground-truth object. It considers both classification quality
+and localization quality.
+
+5. Objectness:
+YOLOv8 does not use a separate objectness loss in the same explicit
+way as older YOLO formulations. Its main detection loss components
+are box loss, classification loss, and DFL.
+
+6. Anchor-Free Detection:
+YOLOv8 uses an anchor-free detection head. Instead of relying on
+predefined anchor boxes, predictions are made relative to feature-map
+locations and bounding-box distances are estimated directly.
+
+Overall:
+
+Total Loss =
+Box Loss + Classification Loss + DFL
+
+These losses are used during backpropagation to update the model
+weights and improve object detection.
+
+
+                 IMAGE
+                   │
+                   ▼
+                  YOLO
+                   │
+                   ▼
+             Raw Predictions
+                   │
+          ┌────────┴────────┐
+          │                 │
+     Class Scores       Box Predictions
+          │                 │
+          └────────┬────────┘
+                   ▼
+          TaskAlignedAssigner
+                   │
+                   ▼
+        Which predictions are
+             positives?
+                   │
+             ┌─────┴─────┐
+             │           │
+             ▼           ▼
+       Class Target   Box Target
+             │           │
+             ▼           ▼
+          BCE Loss    CIoU Loss
+                         +
+                        DFL
+             │           │
+             └─────┬─────┘
+                   ▼
+              TOTAL LOSS
+                   │
+                   ▼
+            Backpropagation
+                   │
+                   ▼
+             Weight Update

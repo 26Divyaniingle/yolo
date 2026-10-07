@@ -1,0 +1,18 @@
+DAY 4 S1 - CONFIDENCE THRESHOLD EXPERIMENT
+
+Model: YOLOv8n
+Images: 20
+IoU: 0.5
+Image Size: 640
+
+Confidence    Total Detections
+--------------------------------
+0.25          ___17__
+0.50          ___7___
+0.75          ___5___
+
+
+Observation:
+As the confidence threshold increases, the number of
+detections generally decreases because YOLO becomes more
+strict about accepting predictions.

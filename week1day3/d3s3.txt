@@ -1,0 +1,23 @@
+YOLO ARCHITECTURE NOTES
+
+1. YOLO is a one-stage object detector that directly predicts
+   object locations and classes.
+
+2. The backbone extracts visual features from the input image.
+
+3. The neck combines multi-scale features using FPN/PAN-style
+   feature fusion.
+
+4. The detection head converts these features into final
+   bounding-box and class predictions.
+
+5. YOLOv8 uses an anchor-free detection head.
+
+YOLOv5 → YOLOv8 major changes:
+
+1. Anchor-based → Anchor-free detection.
+2. C3-style blocks → C2f blocks.
+3. Coupled prediction structure → decoupled detection head.
+4. Updated loss/training formulation.
+5. Updated architecture and training pipeline with broader
+   multi-task support in the Ultralytics ecosystem.

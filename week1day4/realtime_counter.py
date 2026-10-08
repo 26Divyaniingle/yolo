@@ -1,5 +1,7 @@
 import cv2
 import time
+import os
+from pathlib import Path
 from ultralytics import YOLO
 
 
@@ -7,11 +9,18 @@ from ultralytics import YOLO
 # 1. CONFIGURATION
 # ============================================================
 
-MODEL_PATH = "yolo26n.pt"
+# Dynamically locate project root whether run from root or inside week1day4
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR if (BASE_DIR / "videos").exists() else BASE_DIR.parent
 
-VIDEO_PATH = "videos/traffic.mp4"
+MODEL_PATH = str(PROJECT_ROOT / "yolo26n.pt")
 
-OUTPUT_PATH = "output\d4s3.mp4"
+VIDEO_PATH = str(PROJECT_ROOT / "videos" / "traffic.mp4")
+
+OUTPUT_PATH = str(PROJECT_ROOT / "output" / "d4s3.mp4")
+
+# Ensure output directory exists
+os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
 CONFIDENCE_THRESHOLD = 0.30
 
@@ -93,6 +102,20 @@ print(f"Video FPS    : {video_fps:.2f}")
 print(f"Total Frames : {total_frames}")
 
 print("=" * 60)
+
+# ============================================================
+# 5b. DISPLAY & UI SCALING CONFIGURATION
+# ============================================================
+
+# The video is 4K vertical (2160x3840). We scale the display window so it
+# fits comfortably on standard desktop monitors without overflowing.
+DISPLAY_HEIGHT = 800
+display_scale = DISPLAY_HEIGHT / video_height
+display_width = int(video_width * display_scale)
+
+# Scale HUD text and bounding box thickness proportionally with video height
+scale_factor = max(1.0, video_height / 1080.0)
+
 
 
 # ============================================================
@@ -296,7 +319,7 @@ while cap.isOpened():
                 (x1, y1),
                 (x2, y2),
                 (0, 255, 0),
-                2
+                int(2 * scale_factor)
             )
 
 
@@ -313,11 +336,11 @@ while cap.isOpened():
             cv2.putText(
                 frame,
                 label,
-                (x1, max(y1 - 10, 20)),
+                (x1, max(y1 - int(10 * scale_factor), int(25 * scale_factor))),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
+                0.7 * scale_factor,
                 (0, 255, 0),
-                2
+                int(2 * scale_factor)
             )
 
 
@@ -347,11 +370,11 @@ while cap.isOpened():
     cv2.putText(
         frame,
         f"FPS: {fps:.2f}",
-        (20, 40),
+        (int(20 * scale_factor), int(50 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        1,
+        1.0 * scale_factor,
         (0, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
@@ -362,11 +385,11 @@ while cap.isOpened():
     cv2.putText(
         frame,
         f"Persons: {person_count}",
-        (20, 80),
+        (int(20 * scale_factor), int(95 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.8,
+        0.8 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
@@ -377,11 +400,11 @@ while cap.isOpened():
     cv2.putText(
         frame,
         f"Vehicles: {vehicle_count}",
-        (20, 115),
+        (int(20 * scale_factor), int(135 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.8,
+        0.8 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
@@ -392,44 +415,44 @@ while cap.isOpened():
     cv2.putText(
         frame,
         f"Cars: {car_count}",
-        (20, 150),
+        (int(20 * scale_factor), int(175 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.65,
+        0.65 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
     cv2.putText(
         frame,
         f"Motorcycles: {motorcycle_count}",
-        (20, 180),
+        (int(20 * scale_factor), int(210 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.65,
+        0.65 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
     cv2.putText(
         frame,
         f"Buses: {bus_count}",
-        (20, 210),
+        (int(20 * scale_factor), int(245 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.65,
+        0.65 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
     cv2.putText(
         frame,
         f"Trucks: {truck_count}",
-        (20, 240),
+        (int(20 * scale_factor), int(280 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.65,
+        0.65 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
@@ -440,11 +463,11 @@ while cap.isOpened():
     cv2.putText(
         frame,
         f"Frame: {frame_number}/{total_frames}",
-        (20, video_height - 20),
+        (int(20 * scale_factor), video_height - int(25 * scale_factor)),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.6,
+        0.7 * scale_factor,
         (255, 255, 255),
-        2
+        int(2 * scale_factor)
     )
 
 
@@ -452,9 +475,11 @@ while cap.isOpened():
     # 24. DISPLAY FRAME
     # ========================================================
 
+    display_frame = cv2.resize(frame, (display_width, DISPLAY_HEIGHT))
+
     cv2.imshow(
         "YOLO Real-Time Person & Vehicle Counter",
-        frame
+        display_frame
     )
 
 

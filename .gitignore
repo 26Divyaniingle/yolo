@@ -25,3 +25,20 @@ data/
 *.tar.gz
 *.tar
 *.zip
+
+# Datasets
+raw_dataset/
+dataset/
+week1day5/yolo_dataset/images/
+week1day5/yolo_dataset/labels/
+
+# YOLO weights
+*.pt
+
+# Training outputs
+runs/
+
+# Videos
+*.mp4
+output/*.mp4
+week1day4/output/

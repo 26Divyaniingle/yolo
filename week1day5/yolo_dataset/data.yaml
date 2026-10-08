@@ -1,0 +1,9 @@
+path: C:/Users/Desktop/computervisionintern/week1day5/yolo_dataset
+
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: With Helmet
+  1: Without Helmet

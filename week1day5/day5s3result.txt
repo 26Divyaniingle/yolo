@@ -1,0 +1,12 @@
+### Day 5 — S3: YOLOv8n Training Run
+
+* **Model:** YOLOv8n pretrained
+* **Dataset:** Custom helmet-detection dataset
+* **Training configuration:** 50 epochs requested, image size 640, batch size 8, patience 10
+* **Actual training:** 40 epochs; early stopping activated
+* **Hardware:** Intel Core i5-9400F CPU
+* **Training duration:** 1.665 hours
+* **Best checkpoint:** Epoch 30
+* **Best model mAP50:** 0.740 (74.0%)
+* **Best model mAP50–95:** 0.461 (46.1%)
+* **Observation:** The model performs better on the With Helmet class than on the Without Helmet class. Further analysis of the training curves and confusion matrix is needed to identify possible improvements.
